@@ -1,11 +1,12 @@
 A [Dart][dart] implementation of [Sass][sass]. **Sass makes CSS fun again**.
 
-[![Build Status](https://api.travis-ci.org/sass/dart-sass.svg)](https://travis-ci.org/sass/dart-sass)
+[![Travis build status](https://api.travis-ci.org/sass/dart-sass.svg)](https://travis-ci.org/sass/dart-sass) [![Appveyor build status](https://ci.appveyor.com/api/projects/status/84rl9hvu8uoecgef?svg=true)](https://ci.appveyor.com/project/nex3/dart-sass)
 
 [dart]: https://www.dartlang.org
 [sass]: http://sass-lang.com/
 
 * [Using Dart Sass](#using-dart-sass)
+  * [From Chocolatey (Windows)](#from-chocolatey-windows)
   * [Standalone](#standalone)
   * [From npm](#from-npm)
   * [From Pub](#from-pub)
@@ -17,6 +18,18 @@ A [Dart][dart] implementation of [Sass][sass]. **Sass makes CSS fun again**.
 
 There are a few different ways to install and run Dart Sass, depending on your
 environment and your needs.
+
+### From Chocolatey (Windows)
+
+If you use [the Chocolatey package manager](https://chocolatey.org/) for
+Windows, you can install Dart Sass by running
+
+```cmd
+choco install sass -prerelease
+```
+
+That'll give you a `sass` executable on your command line that will run Dart
+Sass.
 
 ### Standalone
 
