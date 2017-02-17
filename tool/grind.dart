@@ -112,6 +112,26 @@ chocolatey_package() {
   new File(output).writeAsBytesSync(new ZipEncoder().encode(archive));
 }
 
+@Task('Release the package on Chocolatey.')
+@Depends(chocolatey_package)
+chocolatey_release() async {
+  var request = new http.MultipartRequest(
+      "PUT", Uri.parse("https://chocolatey.org/api/v2/package/"));
+  request.headers['X-NuGet-ApiKey'] = Platform.environment["CHOCOLATEY_API_KEY"];
+  request.files.add(await http.MultipartFile.fromPath(
+      'package',
+      'build/sass.${_chocolateyVersion()}.nupkg'));
+  var response = await request.send();
+
+  if (response.statusCode % 100 != 2) {
+    throw "Failed to publish package: ${response.statusCode} "
+      "${response.reasonPhrase}\n"
+      "${await response.stream.bytesToString()}";
+  } else {
+    print("Successfully published package.");
+  }
+}
+
 /// Creates a `sass.nuspec` file's contents.
 xml.XmlDocument _nuspec() {
   var builder = new xml.XmlBuilder();

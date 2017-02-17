@@ -11,3 +11,5 @@ mkdir -p ~/.pub-cache
 openssl aes-256-cbc -K $encrypted_d18df560dfb2_key -iv $encrypted_d18df560dfb2_iv \
         -in tool/encrypted/pub-credentials.json.enc -out ~/.pub-cache/credentials.json -d
 pub lish
+
+pub run grinder chocolatey_release

@@ -12,7 +12,7 @@ deploy:
       condition: $DEPLOYABLE = true
       tags: true
 
-  # Deploy to npm and pub.
+  # Deploy to npm, pub, and Chocolatey.
   - provider: script
     script: tool/deploy.sh
     on: *deploy_on
