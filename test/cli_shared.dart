@@ -34,20 +34,79 @@ void sharedTests(Future<TestProcess> runSass(Iterable<String> arguments)) {
     await sass.shouldExit(0);
   });
 
-  test("supports relative imports", () async {
-    await d.file("test.scss", "@import 'dir/test'").create();
+  group("can import files imports", () {
+    test("relative to the entrypoint", () async {
+      await d.file("test.scss", "@import 'dir/test'").create();
 
-    await d.dir("dir", [d.file("test.scss", "a {b: 1 + 2}")]).create();
+      await d.dir("dir", [d.file("test.scss", "a {b: 1 + 2}")]).create();
 
-    var sass = await runSass(["test.scss", "test.css"]);
-    expect(
-        sass.stdout,
-        emitsInOrder([
-          "a {",
-          "  b: 3;",
-          "}",
-        ]));
-    await sass.shouldExit(0);
+      var sass = await runSass(["test.scss", "test.css"]);
+      expect(
+          sass.stdout,
+          emitsInOrder([
+            "a {",
+            "  b: 3;",
+            "}",
+          ]));
+      await sass.shouldExit(0);
+    });
+
+    test("from the load path", () async {
+      await d.file("test.scss", "@import 'test2'").create();
+
+      await d.dir("dir", [d.file("test2.scss", "a {b: c}")]).create();
+
+      var sass = await runSass(["--load-path", "dir", "test.scss", "test.css"]);
+      expect(
+          sass.stdout,
+          emitsInOrder([
+            "a {",
+            "  b: c;",
+            "}",
+          ]));
+      await sass.shouldExit(0);
+    });
+
+    test("relative in preference to from the load path", () async {
+      await d.file("test.scss", "@import 'test2'").create();
+      await d.file("test2.scss", "x {y: z}").create();
+
+      await d.dir("dir", [d.file("test2.scss", "a {b: c}")]).create();
+
+      var sass = await runSass(["--load-path", "dir", "test.scss", "test.css"]);
+      expect(
+          sass.stdout,
+          emitsInOrder([
+            "x {",
+            "  y: z;",
+            "}",
+          ]));
+      await sass.shouldExit(0);
+    });
+
+    test("in load path order", () async {
+      await d.file("test.scss", "@import 'test2'").create();
+
+      await d.dir("dir1", [d.file("test2.scss", "a {b: c}")]).create();
+      await d.dir("dir2", [d.file("test2.scss", "x {y: z}")]).create();
+
+      var sass = await runSass([
+        "--load-path",
+        "dir2",
+        "--load-path",
+        "dir1",
+        "test.scss",
+        "test.css"
+      ]);
+      expect(
+          sass.stdout,
+          emitsInOrder([
+            "x {",
+            "  y: z;",
+            "}",
+          ]));
+      await sass.shouldExit(0);
+    });
   });
 
   test("gracefully reports syntax errors", () async {

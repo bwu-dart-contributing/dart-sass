@@ -16,8 +16,16 @@ import 'util/path.dart';
 main(List<String> args) async {
   var argParser = new ArgParser(allowTrailingOptions: true)
     ..addOption('precision', hide: true)
+    ..addOption('load-path',
+        abbr: 'I',
+        valueHelp: 'PATH',
+        help: 'A path to use when resolving imports.\n'
+            'May be passed multiple times.',
+        allowMultiple: true,
+        splitCommas: false)
     ..addOption('style',
         abbr: 's',
+        valueHelp: 'NAME',
         help: 'Output style.',
         allowed: ['expanded'],
         defaultsTo: 'expanded')
@@ -47,7 +55,8 @@ main(List<String> args) async {
 
   var color = (options['color'] as bool) ?? hasTerminal;
   try {
-    var css = compile(options.rest.first, color: color);
+    var css = compile(options.rest.first,
+        color: color, loadPaths: options['load-path']);
     if (css.isNotEmpty) print(css);
   } on SassException catch (error, stackTrace) {
     stderr.writeln(error.toString(color: color));

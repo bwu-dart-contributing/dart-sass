@@ -10,6 +10,10 @@ import 'src/sync_package_resolver.dart';
 ///
 /// If [color] is `true`, this will use terminal colors in warnings.
 ///
+/// If [loadPaths] are provided, they're used when searching for Sass files to
+/// load with `@import`. They're tried in order, after looking for a relative
+/// path.
+///
 /// If [packageResolver] is provided, it's used to resolve `package:` imports.
 /// Otherwise, they aren't supported. It takes a [SyncPackageResolver][] from
 /// the `package_resolver` package.
@@ -18,14 +22,23 @@ import 'src/sync_package_resolver.dart';
 ///
 /// Throws a [SassException] if conversion fails.
 String compile(String path,
-        {bool color: false, SyncPackageResolver packageResolver}) =>
-    c.compile(path, color: color, packageResolver: packageResolver).css;
+    {bool color: false,
+    Iterable<String> loadPaths,
+    SyncPackageResolver packageResolver}) {
+  var result = c.compile(path,
+      color: color, loadPaths: loadPaths, packageResolver: packageResolver);
+  return result.css;
+}
 
 /// Compiles [source] to CSS and returns the result.
 ///
 /// If [indented] is `true`, this parses [source] using indented syntax;
 /// otherwise (and by default) it uses SCSS. If [color] is `true`, this will use
 /// terminal colors in warnings.
+///
+/// If [loadPaths] are provided, they're used when searching for Sass files to
+/// load with `@import`. They're tried in order, after looking for a relative
+/// path.
 ///
 /// If [packageResolver] is provided, it's used to resolve `package:` imports.
 /// Otherwise, they aren't supported. It takes a [SyncPackageResolver][] from
@@ -40,11 +53,13 @@ String compile(String path,
 String compileString(String source,
     {bool indented: false,
     bool color: false,
+    Iterable<String> loadPaths,
     SyncPackageResolver packageResolver,
     url}) {
   var result = c.compileString(source,
       indented: indented,
       color: color,
+      loadPaths: loadPaths,
       packageResolver: packageResolver,
       url: url);
   return result.css;
