@@ -2,6 +2,7 @@
 // MIT-style license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+import '../../logger.dart';
 import '../../parse/media_query.dart';
 import '../../utils.dart';
 
@@ -25,8 +26,8 @@ class CssMediaQuery {
   /// If passed, [url] is the name of the file from which [contents] comes.
   ///
   /// Throws a [SassFormatException] if parsing fails.
-  static List<CssMediaQuery> parseList(String contents, {url}) =>
-      new MediaQueryParser(contents, url: url).parse();
+  static List<CssMediaQuery> parseList(String contents, Logger logger, {url}) =>
+      new MediaQueryParser(contents, logger, url: url).parse();
 
   /// Creates a media query specifies a type and, optionally, features.
   CssMediaQuery(this.type, {this.modifier, Iterable<String> features})

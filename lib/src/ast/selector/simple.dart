@@ -3,6 +3,7 @@
 // https://opensource.org/licenses/MIT.
 
 import '../../exception.dart';
+import '../../logger.dart';
 import '../../parse/selector.dart';
 import '../selector.dart';
 
@@ -33,9 +34,9 @@ abstract class SimpleSelector extends Selector {
   /// selector.
   ///
   /// Throws a [SassFormatException] if parsing fails.
-  factory SimpleSelector.parse(String contents,
+  factory SimpleSelector.parse(String contents, Logger logger,
           {url, bool allowParent: true}) =>
-      new SelectorParser(contents, url: url, allowParent: allowParent)
+      new SelectorParser(contents, logger, url: url, allowParent: allowParent)
           .parseSimpleSelector();
 
   /// Returns a new [SimpleSelector] based on [this], as though it had been

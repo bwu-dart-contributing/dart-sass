@@ -4,12 +4,13 @@
 
 import 'package:charcode/charcode.dart';
 
+import '../logger.dart';
 import '../util/character.dart';
 import 'parser.dart';
 
 /// A parser for `@keyframes` block selectors.
 class KeyframeSelectorParser extends Parser {
-  KeyframeSelectorParser(String contents, {url}) : super(contents, url: url);
+  KeyframeSelectorParser(String contents, {Logger logger, url}) : super(contents, logger: logger, url: url);
 
   List<String> parse() {
     return wrapSpanFormatException(() {

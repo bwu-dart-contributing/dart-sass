@@ -50,7 +50,7 @@ class BuiltInCallable implements Callable {
   BuiltInCallable.overloaded(
       this.name, Iterable<String> overloads, Iterable<_Callback> callbacks)
       : overloads = new List.unmodifiable(overloads
-            .map((overload) => new ArgumentDeclaration.parse("$overload"))),
+            .map((overload) => new ArgumentDeclaration.parse(overload))),
         callbacks = new List.unmodifiable(callbacks) {
     if (this.overloads.length != this.callbacks.length) {
       throw new ArgumentError(

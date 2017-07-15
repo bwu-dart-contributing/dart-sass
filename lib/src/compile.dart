@@ -6,6 +6,7 @@ import 'dart:collection';
 
 import 'ast/sass.dart';
 import 'io.dart';
+import 'logger.dart';
 import 'sync_package_resolver.dart';
 import 'util/path.dart';
 import 'visitor/evaluate.dart';
@@ -15,7 +16,7 @@ import 'visitor/serialize.dart';
 /// node-sass compatible API.
 CompileResult compile(String path,
         {bool indented,
-        bool color: false,
+        Logger logger,
         SyncPackageResolver packageResolver,
         Iterable<String> loadPaths,
         OutputStyle style,
@@ -24,7 +25,7 @@ CompileResult compile(String path,
         LineFeed lineFeed}) =>
     compileString(readFile(path),
         indented: indented ?? p.extension(path) == '.sass',
-        color: color,
+        logger: logger,
         packageResolver: packageResolver,
         style: style,
         loadPaths: loadPaths,
@@ -37,7 +38,7 @@ CompileResult compile(String path,
 /// the node-sass compatible API.
 CompileResult compileString(String source,
     {bool indented: false,
-    bool color: false,
+      Logger logger,
     SyncPackageResolver packageResolver,
     Iterable<String> loadPaths,
     OutputStyle style,
@@ -45,11 +46,13 @@ CompileResult compileString(String source,
     int indentWidth,
     LineFeed lineFeed,
     url}) {
+  logger ??= new Logger();
+
   var sassTree = indented
-      ? new Stylesheet.parseSass(source, url: url, color: color)
-      : new Stylesheet.parseScss(source, url: url, color: color);
+      ? new Stylesheet.parseSass(source, url: url, logger)
+      : new Stylesheet.parseScss(source, url: url, logger);
   var evaluateResult = evaluate(sassTree,
-      color: color, packageResolver: packageResolver, loadPaths: loadPaths);
+      logger: logger, packageResolver: packageResolver, loadPaths: loadPaths);
   var css = serialize(evaluateResult.stylesheet,
       style: style,
       useSpaces: useSpaces,

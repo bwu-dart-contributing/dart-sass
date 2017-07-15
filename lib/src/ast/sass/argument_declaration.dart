@@ -4,6 +4,7 @@
 
 import 'package:source_span/source_span.dart';
 
+import '../../logger.dart';
 import '../../parse/scss.dart';
 import 'argument.dart';
 import 'node.dart';
@@ -34,8 +35,8 @@ class ArgumentDeclaration implements SassNode {
   /// If passed, [url] is the name of the file from which [contents] comes.
   ///
   /// Throws a [SassFormatException] if parsing fails.
-  factory ArgumentDeclaration.parse(String contents, {url}) =>
-      new ScssParser("($contents)", url: url).parseArgumentDeclaration();
+  factory ArgumentDeclaration.parse(String contents, {Logger logger, url}) =>
+      new ScssParser("($contents)", logger ?? new Logger(), url: url).parseArgumentDeclaration();
 
   String toString() {
     var components = new List.from(arguments.map((arg) => arg.toString()));

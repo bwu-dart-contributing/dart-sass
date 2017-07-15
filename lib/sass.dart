@@ -8,7 +8,8 @@ import 'src/sync_package_resolver.dart';
 
 /// Loads the Sass file at [path], compiles it to CSS, and returns the result.
 ///
-/// If [color] is `true`, this will use terminal colors in warnings.
+/// If [color] is `true`, this will use terminal colors in warnings. If [quiet]
+/// is `true`, this won't print warnings.
 ///
 /// If [loadPaths] are provided, they're used when searching for Sass files to
 /// load with `@import`. They're tried in order, after looking for a relative
@@ -23,10 +24,11 @@ import 'src/sync_package_resolver.dart';
 /// Throws a [SassException] if conversion fails.
 String compile(String path,
     {bool color: false,
+    bool quiet: false,
     Iterable<String> loadPaths,
     SyncPackageResolver packageResolver}) {
   var result = c.compile(path,
-      color: color, loadPaths: loadPaths, packageResolver: packageResolver);
+      logger: new Logger(color: color, quiet: quiet), loadPaths: loadPaths, packageResolver: packageResolver);
   return result.css;
 }
 
@@ -34,7 +36,8 @@ String compile(String path,
 ///
 /// If [indented] is `true`, this parses [source] using indented syntax;
 /// otherwise (and by default) it uses SCSS. If [color] is `true`, this will use
-/// terminal colors in warnings.
+/// terminal colors in warnings. If [quiet] is `true`, this won't print
+/// warnings.
 ///
 /// If [loadPaths] are provided, they're used when searching for Sass files to
 /// load with `@import`. They're tried in order, after looking for a relative
@@ -53,12 +56,14 @@ String compile(String path,
 String compileString(String source,
     {bool indented: false,
     bool color: false,
+      bool quiet: false,
     Iterable<String> loadPaths,
     SyncPackageResolver packageResolver,
     url}) {
   var result = c.compileString(source,
       indented: indented,
-      color: color,
+      logger: new Logger(color: color,
+      quiet: quiet),
       loadPaths: loadPaths,
       packageResolver: packageResolver,
       url: url);

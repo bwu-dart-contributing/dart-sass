@@ -5,12 +5,13 @@
 import 'package:charcode/charcode.dart';
 
 import '../ast/css.dart';
+import '../logger.dart';
 import '../utils.dart';
 import 'parser.dart';
 
 /// A parser for `@media` queries.
 class MediaQueryParser extends Parser {
-  MediaQueryParser(String contents, {url}) : super(contents, url: url);
+  MediaQueryParser(String contents, {Logger logger, url}) : super(contents, logger: logger, url: url);
 
   List<CssMediaQuery> parse() {
     return wrapSpanFormatException(() {

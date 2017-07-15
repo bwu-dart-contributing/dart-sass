@@ -7,6 +7,7 @@ import 'dart:math' as math;
 
 import 'package:charcode/charcode.dart';
 import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
 import 'package:source_span/source_span.dart';
 import 'package:stack_trace/stack_trace.dart';
 
@@ -271,12 +272,4 @@ void rotateSlice(List list, int start, int end) {
     list[i] = element;
     element = next;
   }
-}
-
-/// Prints a warning to standard error, associated with [span].
-///
-/// If [color] is `true`, this uses terminal colors.
-void warn(String message, FileSpan span, {bool color: false}) {
-  var warning = color ? '\u001b[33m\u001b[1mWarning\u001b[0m' : 'WARNING';
-  stderr.writeln("$warning on ${span.message("\n$message", color: color)}\n");
 }

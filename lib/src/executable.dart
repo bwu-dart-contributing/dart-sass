@@ -30,6 +30,7 @@ main(List<String> args) async {
         allowed: ['expanded'],
         defaultsTo: 'expanded')
     ..addFlag('color', abbr: 'c', help: 'Whether to emit terminal colors.')
+    ..addFlag('quiet', abbr: 'q', help: "Don't print warnings.")
     ..addFlag('trace', help: 'Print full Dart stack traces for exceptions.')
     ..addFlag('help',
         abbr: 'h', help: 'Print this usage information.', negatable: false)
@@ -56,7 +57,7 @@ main(List<String> args) async {
   var color = (options['color'] as bool) ?? hasTerminal;
   try {
     var css = compile(options.rest.first,
-        color: color, loadPaths: options['load-path']);
+        color: color, quiet: options['quiet'], loadPaths: options['load-path']);
     if (css.isNotEmpty) print(css);
   } on SassException catch (error, stackTrace) {
     stderr.writeln(error.toString(color: color));

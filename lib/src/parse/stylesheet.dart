@@ -5,6 +5,7 @@
 import 'dart:math' as math;
 
 import 'package:charcode/charcode.dart';
+import 'package:meta/meta.dart';
 import 'package:string_scanner/string_scanner.dart';
 import 'package:tuple/tuple.dart';
 
@@ -12,6 +13,7 @@ import '../ast/sass.dart';
 import '../exception.dart';
 import '../color_names.dart';
 import '../interpolation_buffer.dart';
+import '../logger.dart';
 import '../util/character.dart';
 import '../utils.dart';
 import '../value.dart';
@@ -55,13 +57,8 @@ abstract class StylesheetParser extends Parser {
   /// Whether the parser is currently within a parenthesized expression.
   var _inParentheses = false;
 
-  /// Whether warnings should be emitted using terminal colors.
-  ///
-  /// This is protected and shouldn't be accessed except by subclasses.
-  final bool color;
-
-  StylesheetParser(String contents, {url, this.color: false})
-      : super(contents, url: url);
+  StylesheetParser(String contents, {Logger logger, url})
+      : super(contents, logger: logger, url: url);
 
   // ## Statements
 
@@ -209,8 +206,7 @@ abstract class StylesheetParser extends Parser {
     var children = this.children(_statement);
     if (indented && children.isEmpty) {
       warn("This selector doesn't have any properties and won't be rendered.",
-          selectorSpan,
-          color: color);
+          selectorSpan);
     }
 
     _inStyleRule = wasInStyleRule;
